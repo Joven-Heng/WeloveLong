@@ -39,6 +39,27 @@ for (row in 1:nrow(movies)) {
   movies$production_companies[row] <- inTop50(movies[row,])
 }
 
+# Getting dummies for Genre
+movies$genres <- gsub("[[:punct:]]", "", movies$genres) 
+movies$genres <- gsub("[0-9]+", "", movies$genres)
+movies$genres <- gsub("id ", "", movies$genres)
+movies$genres <- gsub(" name ", "", movies$genres)
+head(movies$genres)
+
+genre_list <- c()
+for (i in movies$genres){
+  g <- as.list(unlist(str_split(i, " ")))
+  for (j in g){
+    genre_list <- c(genre_list, j)
+  }
+}
+genre_list <- unique(genre_list)[-23]
+
+for (i in genre_list){
+  movies[i] <- ifelse(grepl(i, movies$genres), 1, 0)
+}
+
+
 
 #clean productioncrew dataset
 index <- df
